@@ -3,6 +3,8 @@ package taskmanager.data;
 import taskmanager.models.Status;
 import taskmanager.models.Task;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class TaskFileRepository implements TaskRepository{
@@ -88,5 +90,30 @@ public class TaskFileRepository implements TaskRepository{
         return buffer.toString();
     }
 
+    //write to file
+    private void writeToFile(List<Task> tasks) throws DataAccessException {
+        try (PrintWriter writer = new PrintWriter(filePath)){
+            //print the header
+            writer.println("id,createdOn,title,description,doDate,Status");
 
+            for(Task task : tasks){
+                String line = taskToLine(task);
+                writer.println(line);
+            }
+
+        } catch (IOException ex) {
+            throw new DataAccessException("Could not write to filepath: " + filePath);
+        }
+    }
+
+    private int getNextID(List<Task> tasks){
+        int maxID = 0;
+        for(Task task: tasks){
+            if(maxID < task.getId()){
+                maxID = task.getId();
+            }
+        }
+        maxID++;
+        return maxID;
+    }
 }
