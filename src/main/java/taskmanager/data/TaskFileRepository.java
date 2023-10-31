@@ -44,7 +44,14 @@ public class TaskFileRepository implements TaskRepository{
     }
 
     @Override
-    public Task findByID(int taskID) {
+    public Task findByID(int taskID) throws DataAccessException {
+        List<Task> all = findAll();
+        for(Task task : all){
+            if(task.getId() == taskID){
+                return task;
+            }
+        }
+
         return null;
     }
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import taskmanager.models.Status;
 import taskmanager.models.Task;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,4 +47,22 @@ class TaskFileRepositoryTest {
 
     }
 
+    @Test
+    public void shouldFindByExistingID() throws DataAccessException{
+        Task taskOne = repository.findByID(1);
+
+        assertNotNull(taskOne);
+        assertEquals(1, taskOne.getId());
+        assertEquals("2023-10-08", taskOne.getCreatedOn());
+        assertEquals("Review Curriculum", taskOne.getTitle());
+        assertEquals("check content for spelling and grammar", taskOne.getDescription());
+        assertEquals("2023-10-10", taskOne.getDoDate());
+        assertEquals(Status.TODO, taskOne.getStatus());
+    }
+
+    @Test
+    public void shouldNotFindNonExistingID() throws DataAccessException {
+        Task notValid = repository.findByID(9999);
+        assertNull(notValid);
+    }
 }
