@@ -11,6 +11,6 @@ public interface TaskRepository {
     List<Task> findAll() throws DataAccessException;
     Task findByID(int taskID) throws DataAccessException;
     Task create(Task task) throws DataAccessException;
-    boolean update(Task task);
-    boolean delete(int taskID);
+    boolean update(Task task) throws DataAccessException;
+    boolean delete(int taskID) throws DataAccessException;
 }

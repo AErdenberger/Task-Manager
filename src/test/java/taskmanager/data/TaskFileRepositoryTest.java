@@ -115,4 +115,52 @@ class TaskFileRepositoryTest {
         assertEquals("2024-05-05", actual.getDoDate());
         assertEquals(Status.IN_PROGRESS, actual.getStatus());
     }
+
+    //good id gets updated
+    @Test
+    public void shouldUpdate() throws DataAccessException {
+        Task task = repository.findByID(1);
+        task.setStatus(Status.IN_PROGRESS);
+        task.setDescription("check content for spelling and grammar then proofread");
+
+        boolean result = repository.update(task);
+        assertTrue(result);
+
+        assertNotNull(task);
+        assertEquals(1, task.getId());
+        assertEquals("2023-10-08", task.getCreatedOn());
+        assertEquals("Review Curriculum", task.getTitle());
+        assertEquals("check content for spelling and grammar then proofread", task.getDescription());
+        assertEquals("2023-10-10", task.getDoDate());
+        assertEquals(Status.IN_PROGRESS, task.getStatus());
+    }
+
+    //bad id doesn't get updated
+    @Test
+    public void shouldNotUpdateUnknownID() throws DataAccessException {
+        Task task = new Task(99999, "", "", "", "", Status.TODO);
+        boolean result = repository.update(task);
+
+        assertFalse(result);
+    }
+
+    //good id gets deleted
+    @Test
+    public void shouldDelete() throws DataAccessException {
+        boolean result = repository.delete(1);
+        assertTrue(result);
+
+        List<Task> all = repository.findAll();
+        assertEquals(4, all.size());
+
+        Task task = repository.findByID(1);
+        assertNull(task);
+    }
+
+    //bad id gets deleted
+    @Test
+    public void shouldNotDeleteUnknownID() throws DataAccessException {
+        boolean result = repository.delete(9999);
+        assertFalse(result);
+    }
 }
