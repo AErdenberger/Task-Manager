@@ -56,8 +56,18 @@ public class TaskFileRepository implements TaskRepository{
     }
 
     @Override
-    public Task create(Task task) {
-        return null;
+    public Task create(Task task) throws DataAccessException {
+        List<Task> all = findAll();
+
+        //generate ID
+        int nextID = getNextID(all);
+        task.setId(nextID);
+
+        all.add(task);
+
+        writeToFile(all);
+
+        return task;
     }
 
     @Override
