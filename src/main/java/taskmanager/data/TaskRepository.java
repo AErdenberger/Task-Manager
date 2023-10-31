@@ -8,7 +8,7 @@ public interface TaskRepository {
 
     //CRUD = Create Read Update Destroy
 
-    List<Task> findAll();
+    List<Task> findAll() throws DataAccessException;
     Task findByID(int taskID);
     Task create(Task task);
     boolean update(Task task);

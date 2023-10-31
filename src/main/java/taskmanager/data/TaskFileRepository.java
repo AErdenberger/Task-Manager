@@ -3,22 +3,44 @@ package taskmanager.data;
 import taskmanager.models.Status;
 import taskmanager.models.Task;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskFileRepository implements TaskRepository{
 
-    private static final String DELIMETER = ",";
-    private static final String DELIMETER_REPLACEMENT = "@@@";
+    private static final String DELIMITER = ",";
+    private static final String DELIMITER_REPLACEMENT = "@@@";
     private final String filePath;
     public TaskFileRepository(String filePath){
         this.filePath = filePath;
     }
 
     @Override
-    public List<Task> findAll() {
-        return null;
+    public List<Task> findAll() throws DataAccessException {
+        //create a list of tasks
+
+        List<Task> result = new ArrayList<>();
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+
+            reader.readLine();
+
+            for(String line = reader.readLine(); line != null; line = reader.readLine()){
+                //iterator is a line
+                //we're going to read the file until the line we read is null
+                //loop through the file line-by-line
+
+                Task task = lineToTask(line);
+                result.add(task);
+            }
+
+        } catch (FileNotFoundException ex){
+            //do nothing
+        } catch (IOException ex){
+            throw new DataAccessException("Could not open file path: " + filePath);
+        }
+
+        return result;
     }
 
     @Override
@@ -45,16 +67,16 @@ public class TaskFileRepository implements TaskRepository{
 
     //help clean up Strings for dates because commas occur a lot in English writing
     private String restore(String value){
-        return value.replace(DELIMETER_REPLACEMENT, DELIMETER);
+        return value.replace(DELIMITER_REPLACEMENT, DELIMITER);
     }
 
     private String clean(String value){
-        return value.replace(DELIMETER, DELIMETER_REPLACEMENT);
+        return value.replace(DELIMITER, DELIMITER_REPLACEMENT);
     }
 
     //deserialize data
     private Task lineToTask(String line){
-        String[] fields = line.split(DELIMETER);
+        String[] fields = line.split(DELIMITER);
         if(fields.length != 6){
             return null;
         }
@@ -75,16 +97,16 @@ public class TaskFileRepository implements TaskRepository{
     private String taskToLine(Task task){
         //add a comma after each field
         StringBuilder buffer = new StringBuilder(100);
-        buffer.append(task.getId()).append(DELIMETER);
+        buffer.append(task.getId()).append(DELIMITER);
 
         /*
         this is the line that would look at each date which is a string
         if there are ',' we would replace that with @@@ here
          */
-        buffer.append(clean(task.getCreatedOn())).append(DELIMETER);
-        buffer.append(clean(task.getTitle())).append(DELIMETER);
-        buffer.append(clean(task.getDescription())).append(DELIMETER);
-        buffer.append(clean(task.getDoDate())).append(DELIMETER);
+        buffer.append(clean(task.getCreatedOn())).append(DELIMITER);
+        buffer.append(clean(task.getTitle())).append(DELIMITER);
+        buffer.append(clean(task.getDescription())).append(DELIMITER);
+        buffer.append(clean(task.getDoDate())).append(DELIMITER);
         buffer.append(task.getStatus());
 
         return buffer.toString();
