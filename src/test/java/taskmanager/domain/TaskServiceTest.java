@@ -49,14 +49,23 @@ class TaskServiceTest {
     }
 
     @Test
-    public void shouldFindExistingID(){
+    public void shouldFindExistingID() throws DataAccessException {
+        Task task = service.findByID(1);
+        assertNotNull(task);
 
+        assertEquals(1, task.getId());
+        assertEquals("2024-08-01", task.getCreatedOn());
+        assertEquals("Bake Cake", task.getTitle());
+        assertEquals("bake a cake for rover's birthday", task.getDescription());
+        assertEquals("2024-08-22", task.getDoDate());
+        assertEquals(Status.TODO, task.getStatus());
     }
 
     //Sad Path
     @Test
-    public void shouldNotFindNonExistingID(){
-
+    public void shouldNotFindNonExistingID() throws DataAccessException {
+        Task actual = service.findByID(9999);
+        assertNull(actual);
     }
 
     //UPDATE
