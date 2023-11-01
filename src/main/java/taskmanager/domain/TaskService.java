@@ -58,8 +58,30 @@ public class TaskService {
     }
 
     //UPDATE
+    public TaskResult update(Task task) throws DataAccessException {
+        TaskResult result = validate(task);
+        if(!result.isSuccessful()){
+            return result;
+        }
+
+        boolean updated = repository.update(task);
+        //fails if ID of the inputted task doesn't exist
+        if(!updated){
+            result.addMessage(String.format("Task with id: %s does not exist", task.getId()));
+        }
+
+        return result;
+    }
 
     //DELETE
+    public TaskResult deleteByID(int taskID) throws DataAccessException {
+        TaskResult result = new TaskResult();
+        if(!repository.delete(taskID)){
+            result.addMessage(String.format("Task with ID: %s does not exist", taskID));
+        }
+
+        return result;
+    }
 
     //Helper Method
     public TaskResult validate(Task task){
