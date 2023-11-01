@@ -35,7 +35,33 @@ public class TaskService {
     If anything fails we need to let the user know
      */
 
-    //helper method
+    //CREATE
+    public TaskResult create(Task task) throws DataAccessException {
+        TaskResult result = validate(task); //enforce rules
+        if(!result.isSuccessful()){
+            return result;
+        }
+
+        if(task == null){
+            result.addMessage("Task cannot be null");
+            return result;
+        }
+
+        if(task.getId() > 0){
+            result.addMessage("Cannot create an existing task");
+            return result;
+        }
+
+        task = repository.create(task);
+        result.setTask(task);
+        return result;
+    }
+
+    //UPDATE
+
+    //DELETE
+
+    //Helper Method
     public TaskResult validate(Task task){
         TaskResult result = new TaskResult();
 
