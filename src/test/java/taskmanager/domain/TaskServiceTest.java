@@ -19,8 +19,96 @@ class TaskServiceTest {
     //CREATE
     //Happy Path
     @Test
-    public void shouldCreateTask(){
+    public void shouldCreateTask() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "2023-05-09",
+                "Prepare Snacks",
+                "prepare apple slices and snack for soccer game",
+                "2023-05-11",
+                Status.COMPLETE));
 
+        assertNotNull(actual.getTask()); //verify payload is set
+        assertTrue(actual.isSuccessful());
+        assertEquals(99, actual.getTask().getId()); //in the double the ID is set to 99
+    }
+
+    //Sad Path
+    @Test
+    public void shouldNotCreateNullTask() throws DataAccessException {
+        TaskResult actual = service.create(null);
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Task cannot be null", actual.getMessages().getFirst());
+    }
+
+    @Test
+    public void ShouldNotCreateTaskWithoutStartDate() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "  ",
+                "Prepare Snacks",
+                "prepare apple slices and snack for soccer game",
+                "2023-05-11",
+                Status.COMPLETE));
+
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Created-on date is required", actual.getMessages().getFirst());
+    }
+
+    @Test
+    public void shouldNotCreateTaskWithoutTitle() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "2023-05-09",
+                "   ",
+                "prepare apple slices and snack for soccer game",
+                "2023-05-11",
+                Status.COMPLETE));
+
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Title is required and cannot be longer than 50 characters", actual.getMessages().getFirst());
+    }
+
+    @Test
+    public void shouldNotCreateTaskWithTitleLongerThan50() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "2023-05-09",
+                "Prepare Snacksjfldsc;nzjklsmrngfjkslhnmafkldsnzfjklvhdsajl;kfzdslm;c,.a",
+                "prepare apple slices and snack for soccer game",
+                "2023-05-11",
+                Status.COMPLETE));
+
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Title is required and cannot be longer than 50 characters", actual.getMessages().getFirst());
+    }
+
+    @Test
+    public void shouldNotCreateTaskWithoutDescription() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "2023-05-09",
+                "Prepare Snacks",
+                "   ",
+                "2023-05-11",
+                Status.COMPLETE));
+
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Description is required and must be longer than 20 characters", actual.getMessages().getFirst());
+    }
+
+    @Test
+    public void shouldNotCreateTaskWithDescriptionLessThan20() throws DataAccessException {
+        TaskResult actual = service.create(new Task(0,
+                "2023-05-09",
+                "Prepare Snacks",
+                "do it.",
+                "2023-05-11",
+                Status.COMPLETE));
+
+        assertFalse(actual.isSuccessful());
+        assertNull(actual.getTask());
+        assertEquals("Description is required and must be longer than 20 characters", actual.getMessages().getFirst());
     }
 
     //READ
