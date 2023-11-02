@@ -157,7 +157,54 @@ class TaskServiceTest {
     }
 
     //UPDATE
+    //Happy Path
+    @Test
+    public void shouldUpdateExistingTask() throws DataAccessException {
+        List<Task> all = service.findAll();
+        Task toUpdate = all.getFirst();
+        toUpdate.setDescription("This is an updated task description - testing 1-2-3");
+
+        TaskResult actual = service.update(toUpdate);
+        assertTrue(actual.isSuccessful());
+        assertEquals(0, actual.getMessages().size()); //no error messages
+        assertEquals("This is an updated task description - testing 1-2-3", all.getFirst().getDescription());
+    }
+
+    //Sad Path
+    @Test
+    public void shouldNotUpdateNonExistingTask() throws DataAccessException {
+        Task task = new Task(0,
+                "2024-08-01",
+                "Fake Task",
+                "This is a fake task description that has at least 20 characters",
+                "2024-08-02",
+                Status.TODO);
+
+        TaskResult actual = service.update(task);
+        assertFalse(actual.isSuccessful());
+        assertEquals(1, actual.getMessages().size());
+        assertTrue(actual.getMessages().getFirst().contains("does not exist"));
+    }
+
+    @Test
+    public void shouldNotUpdateNullTask() throws DataAccessException {
+        TaskResult actual = service.update(null);
+        assertFalse(actual.isSuccessful());
+        assertEquals(1, actual.getMessages().size());
+        assertEquals("Task cannot be null", actual.getMessages().getFirst());
+    }
 
     //DELETE
+    //Happy Path
+    @Test
+    public void shouldDeleteExistingTask(){
+
+    }
+
+    //Sad Path
+    @Test
+    public void shouldNotDeleteNonExistingTask(){
+
+    }
 
 }
