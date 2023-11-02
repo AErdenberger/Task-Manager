@@ -197,14 +197,20 @@ class TaskServiceTest {
     //DELETE
     //Happy Path
     @Test
-    public void shouldDeleteExistingTask(){
+    public void shouldDeleteExistingTask() throws DataAccessException {
+        TaskResult actual = service.deleteByID(1);
 
+        assertTrue(actual.isSuccessful());
     }
 
     //Sad Path
     @Test
-    public void shouldNotDeleteNonExistingTask(){
+    public void shouldNotDeleteNonExistingTask() throws DataAccessException {
+        TaskResult actual = service.deleteByID(999);
 
+        assertFalse(actual.isSuccessful());
+        assertEquals(1, actual.getMessages().size());
+        assertTrue(actual.getMessages().getFirst().contains("does not exist"));
     }
 
 }
