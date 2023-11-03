@@ -1,6 +1,7 @@
 package taskmanager.ui;
 
 import taskmanager.models.Status;
+import taskmanager.models.Task;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +12,45 @@ public class View {
 
     //get MenuOption
     public int getMenuOption(){
+        displayHeader("Main Menu");
+        displayText("1: Add a Task");
+        displayText("2: View all Tasks");
+        displayText("3: Update a Task");
+        displayText("4: Delete a Task");
+        displayText("5: Exit Program");
+        return readInt("Select an option [1-5]", 1, 5);
+    }
 
+    //CREATE
+    public Task makeTask(){
+        Task result = new Task();
+        result.setCreatedOn(readString("Enter today's date: "));
+        result.setTitle(readString("Enter the title of the task: "));
+        result.setDescription(readString("Enter the description: "));
+        result.setDoDate(readString("Enter the due date: "));
+        result.setStatus(readStatus("Enter the Status: "));
+
+        return result;
+    }
+
+    //READ
+    public void displayTasks(List<Task> tasks){
+        for(Task task : tasks){
+            displayText(String.format("id: %s, Date: %s, Title: %s, Description: %s, Due Date: %s, Status %s%n",
+                    task.getId(),
+                    task.getCreatedOn(),
+                    task.getTitle(),
+                    task.getDescription(),
+                    task.getDoDate(),
+                    task.getStatus()));
+        }
+    }
+
+    //UPDATE and DELETE
+    public int updateByID(){
+        displayText("Input Task ID to modify.");
+        int id = readInt("Enter the ID: ", 1, 999999999);
+        return id;
     }
 
     //helper methods
@@ -76,6 +115,6 @@ public class View {
             } catch (IllegalArgumentException ex) {
                 System.out.printf("%s is not a status%n", selection);
             }
-        }
+        } while (true);
     }
 }
