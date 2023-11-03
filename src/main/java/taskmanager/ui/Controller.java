@@ -25,7 +25,14 @@ public class Controller {
 
     //to run our app
     public void run() {
-
+        view.displayHeader("Welcome to the Task Manager");
+        try{
+            runMenu();
+        } catch (DataAccessException ex) {
+            view.displayText("Something went wrong");
+            view.displayText(ex.getMessage());
+        }
+        view.displayText("Goodbye!");
     }
 
     private void runMenu() throws DataAccessException {
