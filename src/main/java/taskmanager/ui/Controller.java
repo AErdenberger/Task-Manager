@@ -29,12 +29,16 @@ public class Controller {
             int selection = view.getMenuOption();
             switch (selection){
                 case 1:
+                    addTask();
                     break;
                 case 2:
+                    viewTasks();
                     break;
                 case 3:
+                    updateTask();
                     break;
                 case 4:
+                    deleteTask();
                     break;
                 case 5:
                     exit = true;
