@@ -10,7 +10,7 @@
 
     <bean id="view" class="taskmanager.ui.View"/>
     <bean id="service" class="taskmanager.domain.TaskService">
-        <constructor-arg value="repository"/>
+        <constructor-arg ref="repository"/>
     </bean>
 
     <bean id="controller" class="taskmanager.ui.Controller">

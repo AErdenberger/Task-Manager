@@ -14,21 +14,23 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-//        TaskFileRepository repository = new TaskFileRepository("./data/tasks.csv");
-//        TaskService service = new TaskService(repository);
-//        View view = new View();
-//        Controller controller = new Controller(view, service);
-//        controller.run();
 
+        configureWithXMLAndRun();
+    }
+
+    //XML DEPENDENCY INJECTION
+    private static void configureWithXMLAndRun(){
         ApplicationContext container = new ClassPathXmlApplicationContext("dependency-config.xml");
         Controller controller = container.getBean(Controller.class);
         controller.run();
     }
 
-    //XML DEPENDENCY INJECTION
-
     //MANUAL DEPENDENCY INJECTION
     private static void configureManuallyAndRun(){
-
+        TaskFileRepository repository = new TaskFileRepository("./data/tasks.csv");
+        TaskService service = new TaskService(repository);
+        View view = new View();
+        Controller controller = new Controller(view, service);
+        controller.run();
     }
 }
