@@ -1,5 +1,6 @@
 package taskmanager.ui;
 
+import org.springframework.stereotype.Component;
 import taskmanager.data.DataAccessException;
 import taskmanager.domain.TaskResult;
 import taskmanager.domain.TaskService;
@@ -7,6 +8,7 @@ import taskmanager.models.Task;
 
 import java.util.List;
 
+@Component
 public class Controller {
 
     /*

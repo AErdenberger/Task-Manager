@@ -1,5 +1,7 @@
 package taskmanager.data;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import taskmanager.models.Status;
 import taskmanager.models.Task;
 
@@ -7,12 +9,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TaskFileRepository implements TaskRepository{
 
     private static final String DELIMITER = ",";
     private static final String DELIMITER_REPLACEMENT = "@@@";
     private final String filePath;
-    public TaskFileRepository(String filePath){
+    public TaskFileRepository(@Value("./data/tasks.csv")  String filePath){
         this.filePath = filePath;
     }
 

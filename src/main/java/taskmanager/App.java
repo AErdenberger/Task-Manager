@@ -2,6 +2,8 @@ package taskmanager;
 
 import org.springframework.context.ApplicationContext;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import taskmanager.data.DataAccessException;
 import taskmanager.data.TaskFileRepository;
@@ -12,10 +14,11 @@ import taskmanager.ui.View;
 
 import java.util.List;
 
+@ComponentScan
 public class App {
     public static void main(String[] args) {
 
-        configureWithXMLAndRun();
+        ApplicationContext container = new AnnotationConfigApplicationContext(App.class);
     }
 
     //XML DEPENDENCY INJECTION
